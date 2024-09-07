@@ -34,7 +34,7 @@ class GithubAutoFollowNUnfollow:
             page_users = response.json()
             if not page_users:
                 break
-
+            print(page_users)
             users.update(user["login"] for user in page_users)
             page += 1
 
@@ -51,6 +51,7 @@ class GithubAutoFollowNUnfollow:
             f"{self.github_api_url}/user/following/{follow_target}",
             headers=self.request_headers
         )
+        print(response.json())
         response.raise_for_status()
         print(f"Successfully followed {follow_target}")
 
@@ -65,6 +66,7 @@ class GithubAutoFollowNUnfollow:
             f"{self.github_api_url}/user/following/{unfollow_target}",
             headers=self.request_headers
         )
+        print(response.json())
         response.raise_for_status()
         print(f"Successfully unfollowed {unfollow_target}")
 
