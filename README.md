@@ -34,6 +34,12 @@ python main.py
 
 There is two users I have to follow
 
+![스크린샷 2024-09-07 11-46-14](https://github.com/user-attachments/assets/a1708383-8ac6-4986-a362-398e443b2043)
+
 Run python script
 
+![스크린샷 2024-09-07 11-47-12](https://github.com/user-attachments/assets/614e255d-0ccb-4b0f-ac12-b9c9d65dc04b)
+
 Result
+
+![image](https://github.com/user-attachments/assets/53db713c-6801-4b22-b9aa-86f731df7a2f)
