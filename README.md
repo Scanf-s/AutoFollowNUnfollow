@@ -2,7 +2,7 @@
 
 This program is designed to reduce the hassle of following and following by hand. When you run this program, it automatically follows/unfollows.
 
-I've only done a simple test (tested to cancel the follow and follow the user again using this python script), so it may need to be improved in the future
+I've only done a simple test (tested by canceling the follow and following the user again using this Python script), so it may not function properly or might need improvement in the future.
 
 # How to install
 
