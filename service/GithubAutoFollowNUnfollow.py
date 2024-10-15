@@ -1,7 +1,5 @@
-# service/GithubAutoFollowNUnfollow.py
-
 import requests
-
+import logging
 
 class GithubAutoFollowNUnfollow:
     def __init__(self, username, token):
@@ -15,82 +13,67 @@ class GithubAutoFollowNUnfollow:
         }
 
     def get_users(self, behavior: str) -> set:
-        """
-        https://docs.github.com/ko/rest/users/followers?apiVersion=2022-11-28#list-the-people-a-user-follows
-        https://docs.github.com/ko/rest/users/followers?apiVersion=2022-11-28#list-followers-of-a-user
-        :param behavior:
-        :return:
-        """
-
         users = set()
         page = 1
-        while True:
-            response = requests.get(
-                f"{self.github_api_url}/users/{self.github_username}/{behavior}?per_page=100&page={page}",
-                headers=self.request_headers
-            )
-            response.raise_for_status()
+        try:
+            while True:
+                response = requests.get(
+                    f"{self.github_api_url}/users/{self.github_username}/{behavior}?per_page=100&page={page}",
+                    headers=self.request_headers
+                )
+                response.raise_for_status()
+                page_users = response.json()
+                if not page_users:
+                    break
 
-            page_users = response.json()
-            if not page_users:
-                break
-            print(page_users)
-            users.update(user["login"] for user in page_users)
-            page += 1
+                users.update(user["login"] for user in page_users)
+                page += 1
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Failed to get users for behavior '{behavior}': {e}")
 
         return users
 
     def follow_user(self, follow_target: str) -> None:
-        """
-        https://docs.github.com/ko/rest/users/followers?apiVersion=2022-11-28#follow-a-user
-        :param follow_target:
-        :return:
-        """
-
-        response = requests.put(
-            f"{self.github_api_url}/user/following/{follow_target}",
-            headers=self.request_headers
-        )
-        print(response.json())
-        response.raise_for_status()
-        print(f"Successfully followed {follow_target}")
+        try:
+            response = requests.put(
+                f"{self.github_api_url}/user/following/{follow_target}",
+                headers=self.request_headers
+            )
+            response.raise_for_status()
+            logging.info(f"Successfully followed {follow_target}")
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Failed to follow {follow_target}: {e}")
 
     def unfollow_user(self, unfollow_target: str) -> None:
-        """
-        https://docs.github.com/ko/rest/users/followers?apiVersion=2022-11-28#unfollow-a-user
-        :param unfollow_target:
-        :return:
-        """
-
-        response = requests.delete(
-            f"{self.github_api_url}/user/following/{unfollow_target}",
-            headers=self.request_headers
-        )
-        print(response.json())
-        response.raise_for_status()
-        print(f"Successfully unfollowed {unfollow_target}")
+        try:
+            response = requests.delete(
+                f"{self.github_api_url}/user/following/{unfollow_target}",
+                headers=self.request_headers
+            )
+            response.raise_for_status()
+            logging.info(f"Successfully unfollowed {unfollow_target}")
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Failed to unfollow {unfollow_target}: {e}")
 
     def run(self):
         followers = self.get_users("followers")
         following = self.get_users("following")
 
-        print(f"Followers: {len(followers)}")
-        print(f"Following: {len(following)}")
+        logging.info(f"Followers: {len(followers)}")
+        logging.info(f"Following: {len(following)}")
 
         # Follow users who follow you, but you don't follow back
         to_follow = followers - following
         if len(to_follow) > 0:
-            print("Follow target list : ")
-            print(to_follow)
+            logging.info(f"Follow target list: {to_follow}")
             for user in to_follow:
                 self.follow_user(user)
 
         # Unfollow users who don't follow you back
         to_unfollow = following - followers
         if len(to_unfollow) > 0:
-            print("UnFollow target list : ")
-            print(to_unfollow)
+            logging.info(f"Unfollow target list: {to_unfollow}")
             for user in to_unfollow:
                 self.unfollow_user(user)
 
-        print("Job Done!")
+        logging.info("Job Done!")

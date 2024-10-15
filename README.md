@@ -32,7 +32,7 @@ python main.py
 
 # Sample
 
-There is two users I have to follow
+There are two users I have to follow
 
 ![스크린샷 2024-09-07 11-46-14](https://github.com/user-attachments/assets/a1708383-8ac6-4986-a362-398e443b2043)
 
