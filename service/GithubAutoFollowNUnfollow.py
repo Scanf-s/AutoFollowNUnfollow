@@ -1,9 +1,11 @@
 import requests
 import logging
+import os
 
 class GithubAutoFollowNUnfollow:
+
     def __init__(self, username, token):
-        self.github_api_url = "https://api.github.com"
+        self.github_api_url = os.getenv("GITHUB_API_URL")
         self.github_username = username
         self.github_token = token
 
