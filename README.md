@@ -6,14 +6,14 @@ I've only done a simple test (tested by canceling the follow and following the u
 
 # How to install
 
-## 1. Make python venv
+## 1. Install dependencies
 ```shell
-python -m venv .venv (or whatever you want)
-source .venv/bin/activate
-pip install -r requirements.txt
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv venv .venv
+uv sync
 ```
 
-## 2. Make .env file
+## 2. Make .env file and set environment variables
 
 ```shell
 # In project...
@@ -27,6 +27,7 @@ vim .env
 
 ## 3. Run main.py
 ```shell
+source .venv/bin/activate
 python main.py
 ```
 
